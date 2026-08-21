@@ -345,4 +345,16 @@ export class ApiClient {
     if (!res.ok) throw new Error(data.error || 'Gagal menghapus log error');
     return data.success;
   }
+
+  // Autonomous Co-Pilot Developer & Self-Healing Diagnostics
+  static async triggerCopilotDiagnose(adminId: string, issueContext?: string, issueMessage?: string): Promise<any> {
+    const res = await fetch('/api/admin/copilot/diagnose', {
+      method: 'POST',
+      headers: this.getHeaders(adminId),
+      body: JSON.stringify({ issueContext, issueMessage }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Gagal menjalankan diagnosa Co-Pilot');
+    return data.copilot;
+  }
 }

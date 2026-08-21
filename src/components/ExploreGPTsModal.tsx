@@ -15,6 +15,24 @@ import { CustomGPT } from '../types';
 
 export const DEFAULT_CUSTOM_GPTS: CustomGPT[] = [
   {
+    id: 'gpt-copilot-developer',
+    name: 'NEXUS Co-Pilot Developer & Self-Healer',
+    tagline: 'Autonomous AI Debugger, Code Reviewer & Auto-Fix Specialist',
+    description:
+      'Co-Pilot Developer cerdas yang memantau performa kode, menganalisis bug aplikasi, memberikan patch mandiri, dan merancang solusi self-healing untuk arsitektur sistem.',
+    category: 'Programming',
+    icon: 'code',
+    badge: 'Autonomous Co-Pilot',
+    systemPrompt:
+      'Anda adalah NEXUS Co-Pilot Developer & Self-Healing Engine. Tugas Anda adalah membantu developer mendiagnosis bug, memperbaiki error runtime, menganalisis root cause, menghasilkan kode perbaikan (patch), dan menyusun strategi self-repair otomatis pada aplikasi web/mobile.',
+    starterPrompts: [
+      'Jalankan diagnosa bug pada potongan kode error ini dan berikan solusinya',
+      'Bagaimana cara menerapkan mekanisme self-healing retry otomatis pada API request?',
+      'Review performa dan temukan potensi error/memory leak pada kode aplikasi saya',
+      'Buat script unit test dan automated fallback handler untuk aplikasi ini',
+    ],
+  },
+  {
     id: 'gpt-code-architect',
     name: 'NEXUS Code Architect',
     tagline: 'Senior Full-Stack Engineer & Algorithm Expert',

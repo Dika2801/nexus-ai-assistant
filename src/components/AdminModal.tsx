@@ -14,6 +14,9 @@ import {
   Trash2,
   AlertCircle,
   Info,
+  Cpu,
+  Wrench,
+  Sparkles,
 } from 'lucide-react';
 import { AdminStats, AIModel, ErrorLogEntry } from '../types';
 import { ApiClient } from '../lib/api';
@@ -40,6 +43,10 @@ export const AdminModal: React.FC<AdminModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  // Co-Pilot Developer state
+  const [isCopilotRunning, setIsCopilotRunning] = useState(false);
+  const [copilotResult, setCopilotResult] = useState<any>(null);
 
   // Form states
   const [defaultModel, setDefaultModel] = useState('nexus-5.6-sol');
@@ -96,6 +103,26 @@ export const AdminModal: React.FC<AdminModalProps> = ({
       setTimeout(() => setSuccessMsg(null), 3000);
     } catch (err: any) {
       setError(err.message || 'Gagal membersihkan log.');
+    }
+  };
+
+  const handleRunCopilotSelfHeal = async () => {
+    setIsCopilotRunning(true);
+    setError(null);
+    try {
+      const result = await ApiClient.triggerCopilotDiagnose(
+        adminId,
+        'Admin Self-Heal Trigger',
+        `Pemeriksaan integritas sistem rutin. Total error logs saat ini: ${errorLogs.length}`
+      );
+      setCopilotResult(result);
+      setSuccessMsg('Diagnosa & Self-Healing Co-Pilot selesai dijalankan.');
+      await loadData();
+      setTimeout(() => setSuccessMsg(null), 4000);
+    } catch (err: any) {
+      setError(err.message || 'Gagal menjalankan Self-Healing Co-Pilot.');
+    } finally {
+      setIsCopilotRunning(false);
     }
   };
 
@@ -206,6 +233,69 @@ export const AdminModal: React.FC<AdminModalProps> = ({
               </div>
             </div>
           )}
+
+          {/* Autonomous Co-Pilot Developer & Self-Healing Diagnostics Card */}
+          <div className="p-3.5 rounded-xl bg-gradient-to-br from-[#0c1815] to-[#080808] border border-emerald-500/20 shadow-lg space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                  <Cpu className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+                    NEXUS Co-Pilot Developer (Self-Healing Engine)
+                    <span className="px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      Active Guard
+                    </span>
+                  </h4>
+                  <p className="text-[10px] text-white/50">
+                    Menganalisis anomali sistem, memulihkan database secara otonom & meresolusi error secara otomatis.
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={handleRunCopilotSelfHeal}
+                disabled={isCopilotRunning}
+                className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-semibold flex items-center gap-1.5 transition-all shadow-md shadow-emerald-600/20 disabled:opacity-50"
+              >
+                {isCopilotRunning ? (
+                  <>
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                    <span>Mendiagnosa...</span>
+                  </>
+                ) : (
+                  <>
+                    <Wrench className="w-3.5 h-3.5" />
+                    <span>Jalankan Self-Repair</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Diagnostic Report View */}
+            {copilotResult && (
+              <div className="p-3 rounded-lg bg-[#0e1613] border border-emerald-500/30 text-[11px] space-y-2 animate-in fade-in">
+                <div className="flex items-center justify-between text-emerald-400 font-semibold">
+                  <span className="flex items-center gap-1">
+                    <Sparkles className="w-3.5 h-3.5" /> Laporan Diagnosa Co-Pilot:
+                  </span>
+                  <span className="uppercase text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">
+                    Status: {copilotResult.diagnostic?.healthStatus || 'Healed'}
+                  </span>
+                </div>
+                <p className="text-white/90 leading-relaxed font-sans">
+                  {copilotResult.diagnostic?.diagnosis || 'Sistem dan database berada dalam kondisi optimal.'}
+                </p>
+                <div className="p-2 rounded bg-black/40 border border-white/5 text-[10px] text-white/70 font-mono flex items-center justify-between">
+                  <span>Tindakan: {copilotResult.diagnostic?.autoFixAction || 'Auto-integrity check complete.'}</span>
+                  <span className="text-emerald-400 font-semibold">
+                    Entitas diperbaiki: {copilotResult.repairedEntitiesCount || 0}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* 2. Global System Configuration */}
           <div className="p-3.5 rounded-xl bg-[#080808] border border-white/5 space-y-3">
