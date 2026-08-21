@@ -14,4 +14,4 @@ jobs:
       - name: Push to Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push --force https://USERNAME_HF:$HF_TOKEN@huggingface.co/spaces/USERNAME_HF/NAMA_SPACE main
+        run: git push --force https://Dikatak:$HF_TOKEN@huggingface.co/spaces/Dikatak/ai-char-scanner main
