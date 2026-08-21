@@ -1,0 +1,6 @@
+{
+  "name": "NEXUS AI Assistant",
+  "description": "Mobile-first, secure, zero-cost AI Assistant with Chat, Vision & Doc Tools, Voice Input/Output, Conversation History, and Admin Management.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
