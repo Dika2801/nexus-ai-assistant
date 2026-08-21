@@ -1,38 +1,27 @@
-# Multi-stage Dockerfile for Zero-Cost Hugging Face Spaces / Container Deployment
-FROM node:20-alpine AS builder
+# Hugging Face Spaces Dockerfile for Node.js Full-Stack App
+FROM node:20-slim
 
 WORKDIR /app
 
-# Copy dependency manifests
-COPY package*.json ./
+# Copy package manifest and install dependencies
+COPY package.json ./
+RUN npm install
 
-# Install all dependencies including devDependencies for build
-RUN npm ci || npm install
-
-# Copy application source
+# Copy application source files
 COPY . .
 
-# Build Vite frontend and bundled Node/Express backend (dist/server.cjs)
+# Build production assets (Vite frontend + bundled Node backend)
 RUN npm run build
 
-# Production runtime container
-FROM node:20-alpine AS runner
-
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV PORT=7860
-
-# Create app directory with user permissions for Hugging Face Space (user 1000)
+# Create data directory and grant ownership to the default node user (UID 1000)
 RUN mkdir -p /app/data && chown -R node:node /app
-
-# Copy production assets from builder
-COPY --from=builder --chown=node:node /app/package*.json ./
-COPY --from=builder --chown=node:node /app/dist ./dist
-COPY --from=builder --chown=node:node /app/node_modules ./node_modules
 
 USER node
 
+ENV NODE_ENV=production
+ENV PORT=7860
 EXPOSE 7860
 
 CMD ["node", "dist/server.cjs"]
+
+
