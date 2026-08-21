@@ -344,25 +344,25 @@ export const ChatView: React.FC<ChatViewProps> = ({
               <div
                 key={msg.id}
                 id={`message-bubble-${msg.id}`}
-                className={`flex gap-3 sm:gap-4 ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in duration-200`}
+                className={`flex gap-2.5 sm:gap-4 ${isUser ? 'justify-end' : 'justify-start'} animate-in fade-in duration-200 w-full min-w-0`}
               >
                 {/* Assistant Avatar */}
                 {!isUser && (
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shrink-0 mt-0.5 shadow-md shadow-emerald-500/20 ring-1 ring-white/10">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shrink-0 mt-0.5 shadow-md shadow-emerald-500/20 ring-1 ring-white/10">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 sm:w-4 sm:h-4">
                       <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
                       <circle cx="12" cy="12" r="3" fill="currentColor" />
                     </svg>
                   </div>
                 )}
 
-                <div className={`max-w-[90%] sm:max-w-[85%] ${isUser ? 'items-end' : 'items-start'} flex flex-col`}>
+                <div className={`min-w-0 ${isUser ? 'max-w-[88%] sm:max-w-[80%] items-end' : 'w-full flex-1 items-start'} flex flex-col`}>
                   {/* Message Bubble Container */}
                   <div
-                    className={`rounded-2xl px-4 py-3 ${
+                    className={`rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 ${
                       isUser
                         ? 'bg-[#262626] text-white rounded-tr-sm border border-white/5'
-                        : 'bg-transparent text-slate-100 px-0 sm:px-1'
+                        : 'bg-transparent text-slate-100 px-0 sm:px-0.5 w-full min-w-0'
                     }`}
                   >
                     {/* User attachments */}
@@ -414,21 +414,24 @@ export const ChatView: React.FC<ChatViewProps> = ({
                     )}
 
                     {/* Markdown Content */}
-                    <div className="prose prose-invert max-w-none text-sm leading-relaxed selection:bg-emerald-500/30">
+                    <div className="prose prose-invert max-w-none text-[13.5px] sm:text-sm leading-relaxed selection:bg-emerald-500/30 w-full min-w-0 break-words [word-break:break-word] overflow-hidden">
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         components={{
                           table({ children, ...props }: any) {
                             return (
-                              <div className="my-4 rounded-xl border border-white/10 bg-[#0f0f0f] overflow-hidden shadow-lg">
-                                <div className="flex items-center justify-between px-3.5 py-2 bg-[#171717] border-b border-white/5 text-xs text-white/50">
+                              <div className="my-3 sm:my-4 rounded-xl border border-white/10 bg-[#0d0d0d] shadow-lg w-full max-w-full overflow-hidden">
+                                <div className="flex items-center justify-between px-3 py-1.5 bg-[#161616] border-b border-white/5 text-[11px] text-white/50">
                                   <div className="flex items-center gap-1.5 font-medium text-white/70">
                                     <TableIcon className="w-3.5 h-3.5 text-emerald-400" />
                                     <span>Tabel Terstruktur</span>
                                   </div>
+                                  <span className="text-[10px] text-white/40 font-mono flex items-center gap-1">
+                                    <span>Geser</span> &rarr;
+                                  </span>
                                 </div>
-                                <div className="overflow-x-auto">
-                                  <table className="w-full text-left border-collapse text-xs" {...props}>
+                                <div className="overflow-x-auto w-full max-w-full touch-pan-x">
+                                  <table className="w-full text-left border-collapse text-xs divide-y divide-white/10" {...props}>
                                     {children}
                                   </table>
                                 </div>
@@ -437,7 +440,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                           },
                           thead({ children, ...props }: any) {
                             return (
-                              <thead className="bg-[#1b1b1b] text-white/90 font-semibold border-b border-white/10" {...props}>
+                              <thead className="bg-[#181818] text-white/90 font-semibold border-b border-white/10" {...props}>
                                 {children}
                               </thead>
                             );
@@ -458,14 +461,14 @@ export const ChatView: React.FC<ChatViewProps> = ({
                           },
                           th({ children, ...props }: any) {
                             return (
-                              <th className="px-4 py-2.5 font-semibold text-white/90 text-left border-b border-white/10 tracking-wide text-xs" {...props}>
+                              <th className="px-3 py-2 sm:px-4 sm:py-2.5 font-semibold text-white/90 text-left border-b border-white/10 text-[11px] sm:text-xs whitespace-nowrap bg-[#181818]" {...props}>
                                 {children}
                               </th>
                             );
                           },
                           td({ children, ...props }: any) {
                             return (
-                              <td className="px-4 py-2.5 text-white/80 border-b border-white/5 text-xs align-top" {...props}>
+                              <td className="px-3 py-2 sm:px-4 sm:py-2.5 text-white/80 border-b border-white/5 text-[11px] sm:text-xs align-top whitespace-normal break-words" {...props}>
                                 {children}
                               </td>
                             );
@@ -479,14 +482,14 @@ export const ChatView: React.FC<ChatViewProps> = ({
                           },
                           ul({ children, ...props }: any) {
                             return (
-                              <ul className="list-disc list-inside my-2 space-y-1 text-white/85 text-xs" {...props}>
+                              <ul className="list-disc pl-4 my-2 space-y-1 text-white/85 text-[13.5px] sm:text-sm break-words [word-break:break-word]" {...props}>
                                 {children}
                               </ul>
                             );
                           },
                           ol({ children, ...props }: any) {
                             return (
-                              <ol className="list-decimal list-inside my-2 space-y-1 text-white/85 text-xs" {...props}>
+                              <ol className="list-decimal pl-4 my-2 space-y-1 text-white/85 text-[13.5px] sm:text-sm break-words [word-break:break-word]" {...props}>
                                 {children}
                               </ol>
                             );
@@ -558,9 +561,9 @@ export const ChatView: React.FC<ChatViewProps> = ({
                                 (child.type === 'element' && (child.tagName === 'img' || child.tagName === 'div'))
                             );
                             if (hasBlockChild) {
-                              return <div className="mb-2 last:mb-0">{children}</div>;
+                              return <div className="mb-2.5 last:mb-0 break-words [word-break:break-word]">{children}</div>;
                             }
-                            return <p className="mb-2 last:mb-0" {...props}>{children}</p>;
+                            return <p className="mb-2.5 last:mb-0 break-words [word-break:break-word]" {...props}>{children}</p>;
                           },
                           img({ src, alt, ...props }: any) {
                             return (

@@ -643,9 +643,110 @@ function detectImageGenerationIntent(query: string): { isImageGen: boolean; prom
   return { isImageGen: false, prompt: '' };
 }
 
+// Intelligent Prompt Optimizer & Translator for Image Synthesis
+async function translateAndRefineImagePrompt(rawPrompt: string): Promise<string> {
+  const clean = rawPrompt.trim();
+  if (!clean) return 'breathtaking masterpiece, 8k resolution, photorealistic';
+
+  // 1. Try Gemini to generate an ultra-accurate English visual prompt
+  const gemini = getGeminiClient();
+  if (gemini) {
+    try {
+      const res = await gemini.models.generateContent({
+        model: 'gemini-3.7-flash',
+        contents: `You are an expert prompt engineer for text-to-image AI models (Flux, Imagen, DALL-E).
+Convert and expand the following user request into a precise, detailed, visually descriptive English image generation prompt.
+STRICT RULES:
+- Describe the exact subject, composition, environment, lighting, mood, color palette, and camera angle.
+- Follow the user's subject STRICTLY. If the user asks for a cityscape, landscape, object, car, animal, or interior, DO NOT add human portraits, people, or women unless explicitly requested.
+- Output ONLY the refined English prompt text. No markdown, no quotes, no conversational filler.
+
+User request: "${clean}"`,
+      });
+      const refined = res.text?.trim().replace(/^["'`]|["'`]$/g, '');
+      if (refined && refined.length > 5 && !refined.toLowerCase().startsWith('here is') && !refined.toLowerCase().startsWith('prompt:')) {
+        return refined;
+      }
+    } catch (e: any) {
+      console.warn('[NEXUS Prompt Optimizer] Gemini translation note:', e?.message);
+    }
+  }
+
+  // 2. High-accuracy dictionary-based translation and visual enrichment fallback
+  let en = clean;
+  const translationMap: Array<[RegExp, string]> = [
+    [/pemandangan kota pada malam hari|pemandangan kota malam|kota malam hari|kota malam/gi, 'breathtaking panoramic cityscape at night, glowing skyscrapers, luminous city street lights, illuminated buildings, clear night sky, reflections on water'],
+    [/pemandangan kota siang hari|pemandangan kota/gi, 'magnificent modern city skyline, architectural skyscrapers, bustling streets, bright daylight, clear sky'],
+    [/pemandangan alam/gi, 'scenic natural landscape, dramatic mountains, lush greenery, crystal clear river, morning light'],
+    [/malam hari|waktu malam/gi, 'at night with glowing lights and atmospheric night ambience'],
+    [/siang hari/gi, 'bright daylight, sunlit, clear skies'],
+    [/sore hari|senja|sunset/gi, 'golden hour sunset, vibrant warm orange and purple twilight sky'],
+    [/pagi hari|sunrise/gi, 'early morning sunrise, golden morning mist'],
+    [/pantai/gi, 'tropical beach, turquoise ocean waves, white sand'],
+    [/gunung/gi, 'majestic mountain peaks, dramatic clouds, breathtaking alpine vista'],
+    [/hutan/gi, 'lush green forest, sunbeams filtering through trees'],
+    [/air terjun/gi, 'majestic cascading waterfall, mist and lush mossy rocks'],
+    [/desa|pedesaan/gi, 'picturesque countryside village, tranquil rural scenery'],
+    [/cyberpunk/gi, 'cyberpunk metropolis, neon lighting, futuristic holograms, rainy reflections'],
+    [/mobil/gi, 'sleek modern luxury sports car'],
+    [/motor/gi, 'futuristic motorcycle'],
+    [/kucing/gi, 'cute adorable fluffy cat, soft fur, close-up'],
+    [/anjing/gi, 'friendly loyal dog, joyful expression'],
+    [/robot/gi, 'futuristic high-tech android robot, polished chrome details'],
+    [/lukisan/gi, 'masterpiece oil painting, rich textures, artistic brushstrokes'],
+    [/anime/gi, 'high quality anime illustration, vivid vibrant colors, makoto shinkai style'],
+    [/ilustrasi 3d/gi, 'cute 3d render, claymation style, soft studio lighting'],
+  ];
+
+  for (const [regex, replacement] of translationMap) {
+    if (regex.test(en)) {
+      en = en.replace(regex, replacement);
+    }
+  }
+
+  return `${en}, highly detailed, photorealistic, cinematic lighting, sharp focus, 8k resolution`;
+}
+
 // Universal AI Image Generation Engine (NEXUS Visual Studio Engine)
 async function generateAiImageHelper(prompt: string, aspectRatio: string = '1:1', imageSize: string = '1K') {
-  // 1. OpenAI DALL-E 3 Official Generation
+  const refinedEnglishPrompt = await translateAndRefineImagePrompt(prompt);
+  console.log(`[NEXUS Image Engine] Original: "${prompt}" -> Refined: "${refinedEnglishPrompt}"`);
+
+  // 1. Google Imagen 3 (Via Gemini API with Imagen 3 generateImages)
+  const gemini = getGeminiClient();
+  if (gemini) {
+    try {
+      let ar: '1:1' | '3:4' | '4:3' | '9:16' | '16:9' = '1:1';
+      if (aspectRatio === '16:9') ar = '16:9';
+      else if (aspectRatio === '9:16') ar = '9:16';
+      else if (aspectRatio === '4:3') ar = '4:3';
+      else if (aspectRatio === '3:4') ar = '3:4';
+
+      const imagenRes = await gemini.models.generateImages({
+        model: 'imagen-3.0-generate-002',
+        prompt: refinedEnglishPrompt,
+        config: {
+          numberOfImages: 1,
+          outputMimeType: 'image/jpeg',
+          aspectRatio: ar,
+        },
+      });
+
+      const base64Bytes = imagenRes.generatedImages?.[0]?.image?.imageBytes;
+      if (base64Bytes) {
+        return {
+          success: true,
+          imageUrl: `data:image/jpeg;base64,${base64Bytes}`,
+          revisedPrompt: refinedEnglishPrompt,
+          model: 'NEXUS Visual Studio HD (Imagen 3)',
+        };
+      }
+    } catch (imagenErr: any) {
+      console.warn('[NEXUS Image Engine] Imagen 3 note:', imagenErr?.message);
+    }
+  }
+
+  // 2. OpenAI DALL-E 3 Official Generation
   const openai = getOpenAIClient();
   if (openai) {
     try {
@@ -655,7 +756,7 @@ async function generateAiImageHelper(prompt: string, aspectRatio: string = '1:1'
 
       const response = await openai.images.generate({
         model: 'dall-e-3',
-        prompt,
+        prompt: refinedEnglishPrompt,
         n: 1,
         size: dalleSize,
         quality: imageSize === '4K' || imageSize === '2K' ? 'hd' : 'standard',
@@ -667,18 +768,18 @@ async function generateAiImageHelper(prompt: string, aspectRatio: string = '1:1'
         return {
           success: true,
           imageUrl,
-          revisedPrompt: revisedPrompt || prompt,
+          revisedPrompt: revisedPrompt || refinedEnglishPrompt,
           model: 'NEXUS Visual Studio HD',
         };
       }
     } catch (dalleErr: any) {
-      console.warn('[NEXUS Image Engine] API generation note:', dalleErr?.message);
+      console.warn('[NEXUS Image Engine] DALL-E note:', dalleErr?.message);
     }
   }
 
-  // 2. High-Fidelity DALL-E 3 Neural Engine Fallback (Guaranteed zero-failure output)
+  // 3. High-Fidelity Flux Engine Fallback (Guaranteed accurate visual output with enhance=false)
   const seed = Math.floor(Math.random() * 10000000);
-  const encodedPrompt = encodeURIComponent(prompt.trim());
+  const encodedPrompt = encodeURIComponent(refinedEnglishPrompt.trim());
   let width = 1024;
   let height = 1024;
   if (aspectRatio === '16:9') {
@@ -689,11 +790,11 @@ async function generateAiImageHelper(prompt: string, aspectRatio: string = '1:1'
     height = 1280;
   }
 
-  const fallbackUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true&enhance=true&model=flux`;
+  const fallbackUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true&enhance=false&model=flux`;
   return {
     success: true,
     imageUrl: fallbackUrl,
-    revisedPrompt: prompt,
+    revisedPrompt: refinedEnglishPrompt,
     model: 'NEXUS Visual Studio',
   };
 }
@@ -1030,7 +1131,10 @@ app.post('/api/chat/stream', rateLimiter, async (req: Request, res: Response) =>
         let finalSysPrompt = systemPrompt
           ? `${modelPersona}\n${NEXUS_IDENTITY_INSTRUCTION}\n${systemPrompt}`
           : `${modelPersona}\n${NEXUS_IDENTITY_INSTRUCTION}\nJawablah dalam bahasa yang digunakan pengguna (Bahasa Indonesia atau Inggris). Selalu gunakan format Markdown yang elegan, rapi, dan terstruktur.
-- Saat membuat tabel: Buatlah tabel Markdown yang rapi dengan baris header yang jelas, batas kolom sejajar, dan data yang terorganisir dengan baik.
+- Format Penulisan & Tabel:
+  - Buatlah jawaban yang rapi, padat, dan mudah dibaca di semua ukuran layar (ponsel/mobile & desktop).
+  - Saat membuat tabel Markdown: Buatlah tabel yang ringkas, terstruktur, dan proporsional. Gunakan nama kolom yang ringkas dan padat, serta isi sel yang tidak terlalu panjang bertele-tele agar tampilan tabel tidak melebar berlebihan dan nyaman dibaca.
+  - Untuk daftar atau poin penjelasan: Gunakan bullet points ringkas dengan baris baru yang rapi.
 - Saat menulis kode program: Gunakan blok kode dengan penanda bahasa yang tepat (\`\`\`typescript, \`\`\`python, dll).
 - Bersikaplah ramah, lugas, cerdas, profesional, dan solutif.`;
 
@@ -1089,8 +1193,8 @@ app.post('/api/chat/stream', rateLimiter, async (req: Request, res: Response) =>
     }
 
     let baseSystemPrompt =
-      (systemPrompt ? `${modelPersonaPrefix}\n${NEXUS_IDENTITY_INSTRUCTION}\n${systemPrompt}` : `${modelPersonaPrefix}\n${NEXUS_IDENTITY_INSTRUCTION}\nJawab dalam bahasa yang digunakan pengguna (Bahasa Indonesia atau Inggris) dengan format Markdown yang rapi dan elegan.`) +
-      '\nSaat membuat tabel data, buatlah tabel Markdown yang rapi dan terstruktur dengan kolom yang informatif.\nSaat menulis kode program, berikan penjelasan singkat dan blok kode dengan nama bahasa yang tepat.';
+      (systemPrompt ? `${modelPersonaPrefix}\n${NEXUS_IDENTITY_INSTRUCTION}\n${systemPrompt}` : `${modelPersonaPrefix}\n${NEXUS_IDENTITY_INSTRUCTION}\nJawab dalam bahasa yang digunakan pengguna (Bahasa Indonesia atau Inggris) dengan format Markdown yang rapi, padat, dan elegan.`) +
+      '\n- Saat membuat tabel data: Buatlah tabel Markdown yang ringkas, rapi, dan proporsional. Hindari membuat kolom yang terlalu lebar atau bertele-tele agar pas dan mudah dibaca di layar mobile.\n- Saat menulis kode program: Berikan penjelasan ringkas dan blok kode dengan nama bahasa yang tepat.';
 
     baseSystemPrompt += liveTimeInstruction;
 
@@ -1549,75 +1653,20 @@ app.post('/api/tools/web-search', rateLimiter, async (req, res) => {
   }
 });
 
-// 9. Tools API: High-Quality Image Generation (Gemini 3.1 Flash Image & DALL-E)
-// 9. Tools API: OpenAI DALL-E 3 Image Generation
+// 9. Tools API: High-Quality Image Generation (NEXUS Visual Studio & Imagen / DALL-E)
 app.post('/api/tools/generate-image', rateLimiter, async (req, res) => {
   const { prompt, size = '1024x1024', imageSize = '1K', aspectRatio = '1:1' } = req.body;
   if (!prompt || typeof prompt !== 'string') {
     return res.status(400).json({ error: 'Prompt gambar tidak boleh kosong.' });
   }
 
-  // 1. OpenAI DALL-E 3 Native Generation
   try {
-    const openai = getOpenAIClient();
-    if (openai) {
-      try {
-        let dalleSize: '1024x1024' | '1024x1792' | '1792x1024' = '1024x1024';
-        if (aspectRatio === '9:16') dalleSize = '1024x1792';
-        if (aspectRatio === '16:9') dalleSize = '1792x1024';
-
-        const response = await openai.images.generate({
-          model: 'dall-e-3',
-          prompt,
-          n: 1,
-          size: dalleSize,
-          quality: imageSize === '4K' || imageSize === '2K' ? 'hd' : 'standard',
-        });
-
-        const imageUrl = response.data?.[0]?.url;
-        const revisedPrompt = response.data?.[0]?.revised_prompt;
-
-        if (imageUrl) {
-          return res.json({
-            success: true,
-            imageUrl,
-            revisedPrompt: revisedPrompt || prompt,
-            model: 'OpenAI DALL-E 3 HD',
-            imageSize,
-            aspectRatio,
-          });
-        }
-      } catch (dalleErr: any) {
-        console.warn('[OpenAI DALL-E 3] Direct generation note:', dalleErr?.message);
-      }
-    }
-
-    // High fidelity visual synthesis fallback with size and aspect ratio support
-    const seed = Math.floor(Math.random() * 1000000);
-    const encodedPrompt = encodeURIComponent(prompt.trim());
-    let width = 1024;
-    let height = 1024;
-    if (imageSize === '4K') {
-      width = aspectRatio === '16:9' ? 3840 : aspectRatio === '9:16' ? 2160 : 2048;
-      height = aspectRatio === '16:9' ? 2160 : aspectRatio === '9:16' ? 3840 : 2048;
-    } else if (imageSize === '2K') {
-      width = aspectRatio === '16:9' ? 2560 : aspectRatio === '9:16' ? 1440 : 1536;
-      height = aspectRatio === '16:9' ? 1440 : aspectRatio === '9:16' ? 2560 : 1536;
-    } else if (aspectRatio === '16:9') {
-      width = 1280;
-      height = 720;
-    } else if (aspectRatio === '9:16') {
-      width = 720;
-      height = 1280;
-    }
-
-    const fallbackUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&seed=${seed}&nologo=true&enhance=true&model=flux`;
-
+    const result = await generateAiImageHelper(prompt, aspectRatio, imageSize);
     return res.json({
       success: true,
-      imageUrl: fallbackUrl,
-      revisedPrompt: `Karya visual OpenAI DALL-E 3 (${aspectRatio}) dari prompt: "${prompt}"`,
-      model: 'OpenAI DALL-E 3 Studio',
+      imageUrl: result.imageUrl,
+      revisedPrompt: result.revisedPrompt,
+      model: result.model,
       imageSize,
       aspectRatio,
     });

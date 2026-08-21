@@ -107,6 +107,7 @@
 
 .prose-nexus table {
   width: 100%;
+  max-width: 100%;
   border-collapse: collapse;
   margin: 0.75rem 0;
   font-size: 0.85rem;
@@ -122,6 +123,24 @@
   background: rgba(255, 255, 255, 0.04);
   font-weight: 600;
   color: #f1f5f9;
+}
+
+/* Force word wrapping on all prose blocks to prevent mobile horizontal blow-out */
+.prose, .prose-nexus, .prose * {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Allow pre and code inside pre to scroll instead of wrapping */
+.prose pre, .prose-nexus pre, .prose pre *, .prose-nexus pre * {
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  white-space: pre !important;
+}
+
+/* Touch-friendly scrolling for tables */
+.touch-pan-x {
+  -webkit-overflow-scrolling: touch;
 }
 
 
