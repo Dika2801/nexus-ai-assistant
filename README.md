@@ -7,13 +7,13 @@ sdk: docker
 app_port: 7860
 pinned: false
 license: mit
-short_description: NEXUS AI Assistant bertenaga OpenAI GPT-5.6, DALL-E 3, Canvas, & Live Voice
+short_description: AI Assistant bertenaga OpenAI GPT-5.6 & DALL-E 3
 ---
 
 # ⚡ NEXUS AI Assistant (OpenAI GPT-5.6 Flagship)
 
 NEXUS AI adalah aplikasi asisten kecerdasan buatan mutakhir bertenaga arsitektur OpenAI GPT-5.6 dengan fitur lengkap setara ChatGPT:
-- **Keluarga Model NEXUS 5.6**: NEXUS 5.6 Sol (Frontier Reasoning), NEXUS 5.6 Terra (Multimodal Workload), NEXUS 5.6 Luna (Ultra Fast), NEXUS 4.5 Omni (Vision & Documents), dan NEXUS Reasoning Pro (Deep Thinking).
+- **Keluarga Model NEXUS 5.6**: NEXUS 5.6 Sol (Frontier Reasoning), NEXUS 5.6 Terra (Multimodal Workload), NEXUS 5.6 Luna (Ultra Fast), NEXUS 4.5 Omni (Vision & Documents), dan NEXUS Reasoning Pro[...]
 - **Format Tabel Markdown Rapi**: Render tabel otomatis rapi dan presisi tinggi setara ChatGPT dengan visual modern.
 - **Canvas Document & Code Workspace**: Editor split-screen interaktif untuk coding & penulisan naskah.
 - **DALL-E 3 Studio**: Pembuatan & editing gambar resolusi tinggi dengan berbagai preset gaya seni dan rasio aspek.
