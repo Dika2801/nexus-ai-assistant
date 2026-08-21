@@ -69,18 +69,18 @@ export const DEFAULT_CUSTOM_GPTS: CustomGPT[] = [
     ],
   },
   {
-    id: 'gpt-dalle-studio',
-    name: 'DALL-E Visual Studio Master',
+    id: 'gpt-nexus-visual',
+    name: 'NEXUS Visual Studio Master',
     tagline: 'Konseptor Seni Visual & Prompt Artist',
     description:
-      'Menghasilkan konsep visual, deskripsi prompt sinematik untuk DALL-E 3 / Midjourney, dan mengarahkan estetika grafis.',
+      'Menghasilkan konsep visual, deskripsi prompt sinematik untuk NEXUS Visual Studio, dan mengarahkan estetika grafis beresolusi tinggi.',
     category: 'Creative',
     icon: 'image',
     badge: 'Visual Arts',
     systemPrompt:
-      'Anda adalah Direktur Seni Visual di NEXUS AI. Bantu pengguna merumuskan prompt visual DALL-E 3 dengan pencahayaan, lensa kamera, komposisi, mood warna, dan detail artistik yang spektakuler.',
+      'Anda adalah Direktur Seni Visual di NEXUS AI (NEXUS Group). Bantu pengguna merumuskan prompt visual berkualitas tinggi dengan pencahayaan, lensa kamera, komposisi, mood warna, dan detail artistik yang spektakuler.',
     starterPrompts: [
-      'Rancang prompt DALL-E 3 untuk pemandangan kota cyberpunk futuristik',
+      'Rancang prompt visual untuk pemandangan kota cyberpunk futuristik',
       'Buat konsep karakter 3D render menggemaskan bergaya Pixar',
       'Buat ilustrasi flat vector minimalis untuk brand teknologi',
       'Deskripsikan lukisan cat minyak lanskap pegunungan mistis',

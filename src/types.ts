@@ -60,7 +60,7 @@ export interface Conversation {
 export interface AIModel {
   id: string;
   name: string;
-  provider: 'OpenAI' | 'Gemini' | 'Community';
+  provider: 'NEXUS' | 'NEXUS Group' | 'Community';
   description: string;
   contextWindow: string;
   speed: 'Ultra Fast' | 'Fast' | 'Balanced' | 'High Reasoning';

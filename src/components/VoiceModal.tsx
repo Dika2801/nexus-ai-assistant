@@ -116,7 +116,7 @@ export const VoiceModal: React.FC<VoiceModalProps> = ({
         {/* Model indicator */}
         <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium mb-8">
           <Radio className="w-3.5 h-3.5 animate-pulse" />
-          <span>ChatGPT Voice Mode • {activeModelName}</span>
+          <span>NEXUS Live Voice Mode • {activeModelName}</span>
         </div>
 
         {/* Dynamic Voice Orb */}
@@ -166,7 +166,7 @@ export const VoiceModal: React.FC<VoiceModalProps> = ({
 
         {/* Live Transcript / Prompt */}
         <p className="text-sm text-white/60 min-h-[48px] max-w-xs mb-6 italic">
-          {transcript ? `"${transcript}"` : audioState === 'listening' ? 'Silakan mulai berbicara langsung...' : 'Suara natural pria (ChatGPT-style)'}
+          {transcript ? `"${transcript}"` : audioState === 'listening' ? 'Silakan mulai berbicara langsung...' : 'NEXUS Neural Male Voice (NEXUS Group)'}
         </p>
 
         {/* Controls */}

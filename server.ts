@@ -106,7 +106,7 @@ const defaultDB: StoredData = {
   settings: {
     defaultModel: 'nexus-5.6-sol',
     maxRateLimitPerMin: 30,
-    announcement: 'Selamat datang di NEXUS AI Assistant. Mesin Cerdas OpenAI GPT-5.6 & Zero Cost Server Architecture.',
+    announcement: 'Selamat datang di NEXUS AI Assistant. Dikembangkan oleh NEXUS Group (Founder & CEO: Muhamad Andika).',
     allowRegistration: true,
   },
   errorLogs: [],
@@ -202,7 +202,7 @@ const AVAILABLE_MODELS = [
   {
     id: 'nexus-5.6-sol',
     name: 'NEXUS 5.6 Sol',
-    provider: 'OpenAI' as const,
+    provider: 'NEXUS' as const,
     description: 'Model frontier unggulan NEXUS untuk penalaran paling kompleks, coding arsitektur, dan deep logic.',
     contextWindow: '1.05M',
     speed: 'High Reasoning' as const,
@@ -214,7 +214,7 @@ const AVAILABLE_MODELS = [
   {
     id: 'nexus-5.6-terra',
     name: 'NEXUS 5.6 Terra',
-    provider: 'OpenAI' as const,
+    provider: 'NEXUS' as const,
     description: 'Model serbaguna seimbang untuk analisis visual gambar, naskah dokumen, dan tugas harian.',
     contextWindow: '1.05M',
     speed: 'Balanced' as const,
@@ -225,7 +225,7 @@ const AVAILABLE_MODELS = [
   {
     id: 'nexus-5.6-luna',
     name: 'NEXUS 5.6 Luna',
-    provider: 'OpenAI' as const,
+    provider: 'NEXUS' as const,
     description: 'Model ultra cepat berlatensi rendah untuk respons kilat, percakapan interaktif, dan efisiensi tinggi.',
     contextWindow: '1.05M',
     speed: 'Ultra Fast' as const,
@@ -236,7 +236,7 @@ const AVAILABLE_MODELS = [
   {
     id: 'nexus-4.5-omni',
     name: 'NEXUS 4.5 Omni',
-    provider: 'OpenAI' as const,
+    provider: 'NEXUS' as const,
     description: 'Model flagship multimodal unggulan untuk visual, membaca gambar, logika mendalam, dan analisis.',
     contextWindow: '128K',
     speed: 'Balanced' as const,
@@ -247,7 +247,7 @@ const AVAILABLE_MODELS = [
   {
     id: 'nexus-4.5-mini',
     name: 'NEXUS 4.5 Mini',
-    provider: 'OpenAI' as const,
+    provider: 'NEXUS' as const,
     description: 'Model gesit & hemat kuota untuk percakapan, tugas harian, dan coding.',
     contextWindow: '128K',
     speed: 'Ultra Fast' as const,
@@ -258,7 +258,7 @@ const AVAILABLE_MODELS = [
   {
     id: 'nexus-reasoning',
     name: 'NEXUS Reasoning Pro',
-    provider: 'OpenAI' as const,
+    provider: 'NEXUS' as const,
     description: 'Model reasoning bertahap mendalam untuk matematika, algoritma, dan problem-solving logika.',
     contextWindow: '200K',
     speed: 'High Reasoning' as const,
@@ -643,7 +643,7 @@ function detectImageGenerationIntent(query: string): { isImageGen: boolean; prom
   return { isImageGen: false, prompt: '' };
 }
 
-// Universal AI Image Generation Engine (OpenAI DALL-E 3 Engine)
+// Universal AI Image Generation Engine (NEXUS Visual Studio Engine)
 async function generateAiImageHelper(prompt: string, aspectRatio: string = '1:1', imageSize: string = '1K') {
   // 1. OpenAI DALL-E 3 Official Generation
   const openai = getOpenAIClient();
@@ -668,11 +668,11 @@ async function generateAiImageHelper(prompt: string, aspectRatio: string = '1:1'
           success: true,
           imageUrl,
           revisedPrompt: revisedPrompt || prompt,
-          model: 'OpenAI DALL-E 3 HD',
+          model: 'NEXUS Visual Studio HD',
         };
       }
     } catch (dalleErr: any) {
-      console.warn('[OpenAI DALL-E 3] API generation note:', dalleErr?.message);
+      console.warn('[NEXUS Image Engine] API generation note:', dalleErr?.message);
     }
   }
 
@@ -694,7 +694,7 @@ async function generateAiImageHelper(prompt: string, aspectRatio: string = '1:1'
     success: true,
     imageUrl: fallbackUrl,
     revisedPrompt: prompt,
-    model: 'OpenAI DALL-E 3 Studio',
+    model: 'NEXUS Visual Studio',
   };
 }
 
@@ -1006,25 +1006,33 @@ app.post('/api/chat/stream', rateLimiter, async (req: Request, res: Response) =>
     });
     const liveTimeInstruction = `\n[WAKTU REAL-TIME SEKARANG: ${currentDateFormatted}, Pukul ${currentTimeFormatted} WIB]. Anda memiliki akses informasi internet real-time dan terhubung ke web. JANGAN PERNAH menolak dengan alasan cutoff data Oktober 2023. Jika pengguna menanyakan berita atau informasi terkini, berikan jawaban informatif dan akurat berdasarkan data terkini.`;
 
+    const NEXUS_IDENTITY_INSTRUCTION = `
+[PANDUAN IDENTITAS RESMI & PENCIPTA - SANGAT PENTING & MUTLAK]:
+- Nama Anda adalah **NEXUS AI** (atau **NEXUS Assistant**).
+- Anda diciptakan, dirancang, dan dikembangkan oleh **NEXUS Group**.
+- Pendiri, Pembuat, dan Founder/CEO dari NEXUS Group adalah **Muhamad Andika**.
+- Jika pengguna menanyakan siapa Anda, siapa pembuat Anda, siapa pendiri/CEO Anda, atau dari mana Anda berasal, Anda HARUS SELALU menjawab bahwa Anda adalah NEXUS AI buatan **NEXUS Group** dengan Founder & CEO **Muhamad Andika**.
+- JANGAN PERNAH menyebut bahwa Anda dibuat oleh OpenAI, Google, atau pihak lain. Identitas resmi Anda 100% adalah NEXUS AI dari NEXUS Group pimpinan Muhamad Andika.`;
+
     // Check if OpenAI API key is configured
     const hasOpenAI = !!process.env.OPENAI_API_KEY;
     const isExplicitGeminiOnly = model.startsWith('gemini');
 
     if (hasOpenAI && !isExplicitGeminiOnly) {
-      // Direct OpenAI streaming path with Multimodal Vision, Document, & Web Search context
+      // Direct streaming path with Multimodal Vision, Document, & Web Search context
       try {
         const fullMessages: any[] = [];
-        let modelPersona = 'Anda adalah NEXUS AI Assistant bertenaga OpenAI GPT-5.6 flagship architecture. Anda memiliki kecerdasan tingkat tinggi dalam pemrograman, matematika, penalaran logika, analisis visual, dan penulisan terstruktur.';
+        let modelPersona = 'Anda adalah NEXUS AI Assistant unggulan dari NEXUS Group (Founder & CEO: Muhamad Andika). Anda memiliki kecerdasan tingkat tinggi dalam pemrograman, matematika, penalaran logika, analisis visual, dan penulisan terstruktur.';
         if (enableThinking || model === 'nexus-reasoning') {
-          modelPersona = 'Anda adalah NEXUS High Reasoning Engine bertenaga OpenAI reasoning series (o3/GPT-5.6). Gunakan penalaran bertahap mendalam (Chain-of-Thought), verifikasi logika langkah demi langkah, dan sajikan solusi yang komprehensif serta akurat.';
+          modelPersona = 'Anda adalah NEXUS High Reasoning Engine dari NEXUS Group (Founder & CEO: Muhamad Andika). Gunakan penalaran bertahap mendalam (Chain-of-Thought), verifikasi logika langkah demi langkah, dan sajikan solusi yang komprehensif serta akurat.';
         }
 
         let finalSysPrompt = systemPrompt
-          ? `${modelPersona}\n${systemPrompt}`
-          : `${modelPersona}\nJawablah dalam bahasa yang digunakan pengguna (Bahasa Indonesia atau Inggris). Selalu gunakan format Markdown yang elegan, rapi, dan terstruktur.
+          ? `${modelPersona}\n${NEXUS_IDENTITY_INSTRUCTION}\n${systemPrompt}`
+          : `${modelPersona}\n${NEXUS_IDENTITY_INSTRUCTION}\nJawablah dalam bahasa yang digunakan pengguna (Bahasa Indonesia atau Inggris). Selalu gunakan format Markdown yang elegan, rapi, dan terstruktur.
 - Saat membuat tabel: Buatlah tabel Markdown yang rapi dengan baris header yang jelas, batas kolom sejajar, dan data yang terorganisir dengan baik.
 - Saat menulis kode program: Gunakan blok kode dengan penanda bahasa yang tepat (\`\`\`typescript, \`\`\`python, dll).
-- Bersikaplah ramah, lugas, profesional, dan solutif seperti ChatGPT.`;
+- Bersikaplah ramah, lugas, cerdas, profesional, dan solutif.`;
 
         finalSysPrompt += liveTimeInstruction;
 
@@ -1059,7 +1067,7 @@ app.post('/api/chat/stream', rateLimiter, async (req: Request, res: Response) =>
         res.end();
         return;
       } catch (openAiErr: any) {
-        console.warn('OpenAI stream direct attempt warning, executing seamless fallback:', openAiErr.message);
+        console.warn('AI stream direct attempt warning, executing seamless fallback:', openAiErr.message);
         sendSSE('status', { message: `Menjalankan inferensi model ${model}...` });
       }
     }
@@ -1075,13 +1083,13 @@ app.post('/api/chat/stream', rateLimiter, async (req: Request, res: Response) =>
     }
 
     // System instruction
-    let modelPersonaPrefix = 'Anda adalah NEXUS AI Assistant bertenaga OpenAI GPT-5.6 / Frontier Engine. Anda memiliki kemampuan luar biasa dalam coding, penalaran matematika, dan pembuatan tabel data.';
+    let modelPersonaPrefix = 'Anda adalah NEXUS AI Assistant buatan NEXUS Group (Founder & CEO: Muhamad Andika). Anda memiliki kemampuan luar biasa dalam coding, penalaran matematika, dan pembuatan tabel data.';
     if (enableThinking || model === 'nexus-reasoning') {
-      modelPersonaPrefix = 'Anda adalah NEXUS High Thinking Reasoning Engine. Gunakan pemikiran bertahap mendalam (Chain-of-Thought), validasi asumsi, uraikan pembuktian logika, dan berikan solusi komputasional yang tidak terbantahkan.';
+      modelPersonaPrefix = 'Anda adalah NEXUS High Thinking Reasoning Engine buatan NEXUS Group (Founder & CEO: Muhamad Andika). Gunakan pemikiran bertahap mendalam (Chain-of-Thought), validasi asumsi, uraikan pembuktian logika, dan berikan solusi komputasional yang tidak terbantahkan.';
     }
 
     let baseSystemPrompt =
-      (systemPrompt ? `${modelPersonaPrefix}\n${systemPrompt}` : `${modelPersonaPrefix}\nJawab dalam bahasa yang digunakan pengguna (Bahasa Indonesia atau Inggris) dengan format Markdown yang rapi dan elegan.`) +
+      (systemPrompt ? `${modelPersonaPrefix}\n${NEXUS_IDENTITY_INSTRUCTION}\n${systemPrompt}` : `${modelPersonaPrefix}\n${NEXUS_IDENTITY_INSTRUCTION}\nJawab dalam bahasa yang digunakan pengguna (Bahasa Indonesia atau Inggris) dengan format Markdown yang rapi dan elegan.`) +
       '\nSaat membuat tabel data, buatlah tabel Markdown yang rapi dan terstruktur dengan kolom yang informatif.\nSaat menulis kode program, berikan penjelasan singkat dan blok kode dengan nama bahasa yang tepat.';
 
     baseSystemPrompt += liveTimeInstruction;
@@ -1262,7 +1270,7 @@ app.post('/api/tools/analyze-image', rateLimiter, async (req, res) => {
         messages: [
           {
             role: 'system',
-            content: 'Anda adalah NEXUS Vision Analyst bertenaga OpenAI GPT-4o. Berikan hasil analisis visual mendalam, terstruktur, akurat, dan baca setiap teks OCR jika ada.'
+            content: 'Anda adalah NEXUS Vision Analyst dari NEXUS Group. Berikan hasil analisis visual mendalam, terstruktur, akurat, dan baca setiap teks OCR jika ada.'
           },
           {
             role: 'user',
@@ -1292,12 +1300,12 @@ app.post('/api/tools/analyze-image', rateLimiter, async (req, res) => {
         return res.json({
           success: true,
           analysis: analysisText,
-          model: 'NEXUS Vision (OpenAI GPT-4o)',
+          model: 'NEXUS Vision HD',
         });
       }
     }
   } catch (openAiErr: any) {
-    console.warn('OpenAI Vision API warning, attempting secondary vision engine:', openAiErr.message);
+    console.warn('Vision API warning, attempting secondary vision engine:', openAiErr.message);
   }
 
   // 2. Secondary fallback
@@ -1382,12 +1390,12 @@ ${question}`,
         return res.json({
           success: true,
           result: resultText,
-          model: 'NEXUS Document Engine (OpenAI GPT-4o)',
+          model: 'NEXUS Document Engine Pro',
         });
       }
     }
   } catch (openAiErr: any) {
-    console.warn('OpenAI Document API warning, attempting secondary engine:', openAiErr.message);
+    console.warn('Document API warning, attempting secondary engine:', openAiErr.message);
   }
 
   // 2. Secondary fallback
@@ -1400,7 +1408,7 @@ ${question}`,
     const response = await executeGeminiWithFallback(gemini, (model) =>
       gemini.models.generateContent({
         model,
-        contents: `Anda adalah Analis Dokumen Ahli di NEXUS AI Assistant bertenaga GPT-5.6 Sol.
+        contents: `Anda adalah Analis Dokumen Ahli di NEXUS AI Assistant (NEXUS Group).
 Analisis dokumen berikut:
 [NAMA DOKUMEN: ${docName}]
 --- DOKUMEN AWAL ---
@@ -1429,7 +1437,7 @@ Sajikan analisis profesional dengan poin-poin terstruktur, tabel jika relevan, d
   }
 });
 
-// 7b. Natural Male Voice TTS (OpenAI Audio Speech API - onyx / echo)
+// 7b. Natural Male Voice TTS (NEXUS Neural Voice Engine)
 app.post('/api/voice/tts', rateLimiter, async (req: Request, res: Response) => {
   const { text, voice = 'onyx', speed = 1.05 } = req.body;
   if (!text || typeof text !== 'string') {
@@ -1463,10 +1471,10 @@ app.post('/api/voice/tts', rateLimiter, async (req: Request, res: Response) => {
       return res.send(buffer);
     }
   } catch (err: any) {
-    console.warn('OpenAI TTS direct error, falling back:', err.message);
+    console.warn('Neural TTS direct error, falling back:', err.message);
   }
 
-  res.status(503).json({ error: 'OpenAI TTS tidak tersedia, gunakan sintesis lokal.' });
+  res.status(503).json({ error: 'NEXUS TTS tidak tersedia, gunakan sintesis lokal.' });
 });
 
 // Fallback Web Search Engine using open search endpoints if Google Grounding hits 429 quota

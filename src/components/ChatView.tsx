@@ -255,7 +255,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
     }));
   };
 
-  // Prompt starters for empty state (ChatGPT style)
+  // Prompt starters for empty state
   const promptStarters = [
     {
       title: 'Tulis & Review Kode',
@@ -264,15 +264,15 @@ export const ChatView: React.FC<ChatViewProps> = ({
       icon: Code2,
     },
     {
-      title: 'DALL-E Visual Art',
+      title: 'NEXUS Visual Art',
       desc: 'Rancang prompt lukisan lanskap kota futuristik beresolusi 8k',
-      prompt: 'Buatkan prompt DALL-E 3 yang sangat detail untuk pemandangan kota metropolitan futuristik di malam hari dengan pencahayaan neon sinematik.',
+      prompt: 'Buatkan prompt visual yang sangat detail untuk pemandangan kota metropolitan futuristik di malam hari dengan pencahayaan neon sinematik.',
       icon: ImageIcon,
     },
     {
       title: 'Analisis & Riset Mendalam',
-      desc: 'Bandingkan arsitektur OpenAI GPT-5.6 dengan frontier models',
-      prompt: 'Analisis keunggulan arsitektur penalaran frontier model OpenAI GPT-5.6 Sol dibandingkan model generasi sebelumnya.',
+      desc: 'Bandingkan arsitektur NEXUS 5.6 Sol dengan frontier models',
+      prompt: 'Analisis keunggulan arsitektur penalaran frontier model NEXUS 5.6 Sol dibandingkan model generasi sebelumnya.',
       icon: Sparkles,
     },
     {
@@ -289,7 +289,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
       <div className="flex-1 overflow-y-auto pt-4 pb-4 space-y-6 pr-1">
         {messages.length === 0 ? (
           <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 py-8 animate-in fade-in">
-            {/* ChatGPT Logo Badge */}
+            {/* NEXUS Logo Badge */}
             <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 via-teal-500 to-cyan-500 flex items-center justify-center text-white shadow-xl shadow-emerald-500/20 mb-4 ring-1 ring-white/20">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8">
                 <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
@@ -301,7 +301,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
               Apa yang bisa saya bantu hari ini?
             </h2>
             <p className="text-xs sm:text-sm text-white/50 max-w-md mb-8 leading-relaxed">
-              NEXUS AI bertenaga OpenAI GPT-5.6, DALL-E 3 Visual Studio, Canvas Workspace, dan ChatGPT Live Voice Mode.
+              NEXUS AI dikembangkan oleh NEXUS Group (Founder & CEO: Muhamad Andika). Dilengkapi NEXUS Visual Studio, Canvas Workspace, dan Live Voice Mode.
             </p>
 
             {/* Quick Starters Grid */}
@@ -390,16 +390,16 @@ export const ChatView: React.FC<ChatViewProps> = ({
                       </div>
                     )}
 
-                    {/* DALL-E Generated Image Display */}
+                    {/* NEXUS Generated Image Display */}
                     {msg.imageUrl && (
                       <div className="mb-4 rounded-2xl overflow-hidden border border-white/10 bg-black/30 max-w-lg">
                         <img
                           src={msg.imageUrl}
-                          alt="DALL-E Output"
+                          alt="NEXUS Visual Output"
                           className="w-full h-auto object-contain max-h-[400px]"
                         />
                         <div className="p-2.5 bg-[#141414] border-t border-white/5 flex items-center justify-between">
-                          <span className="text-[11px] font-mono text-emerald-400">DALL-E 3 Studio</span>
+                          <span className="text-[11px] font-mono text-emerald-400">NEXUS Visual Studio</span>
                           <a
                             href={msg.imageUrl}
                             download="nexus_art.png"
@@ -576,7 +576,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                                   <span className="flex items-center gap-2 overflow-hidden">
                                     <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
                                     <span className="text-xs text-white/80 font-medium truncate">
-                                      {alt || 'Gambar DALL-E Studio'}
+                                      {alt || 'Gambar NEXUS Visual Studio'}
                                     </span>
                                   </span>
                                   <a
@@ -832,13 +832,13 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
             {/* Right Tools: Live Voice Mode & Send Button */}
             <div className="flex items-center gap-1.5">
-              {/* ChatGPT Live Voice Mode Button */}
+              {/* NEXUS Live Voice Mode Button */}
               {onOpenVoiceMode && (
                 <button
                   type="button"
                   onClick={onOpenVoiceMode}
                   className="p-2 rounded-xl text-white/80 hover:text-emerald-400 hover:bg-emerald-500/10 border border-white/5 hover:border-emerald-500/20 transition-all group"
-                  title="Masuk ke ChatGPT Live Voice Mode"
+                  title="Masuk ke NEXUS Live Voice Mode"
                 >
                   <Headphones className="w-4 h-4 group-hover:scale-110 transition-transform" />
                 </button>

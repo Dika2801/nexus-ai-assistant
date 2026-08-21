@@ -254,7 +254,7 @@ export const ChatGPTSidebar: React.FC<ChatGPTSidebarProps> = ({
               className="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs text-white/80 hover:text-white hover:bg-white/5 transition-colors"
             >
               <ImageIcon className="w-4 h-4 text-amber-400" />
-              <span>DALL-E 3 Studio</span>
+              <span>NEXUS Visual Studio</span>
             </button>
           </div>
         </div>
@@ -276,7 +276,7 @@ export const ChatGPTSidebar: React.FC<ChatGPTSidebarProps> = ({
           )}
         </div>
 
-        {/* User Account & Footer Settings (ChatGPT style) */}
+        {/* User Account & Footer Settings */}
         <div className="p-3 border-t border-white/5 bg-[#0e0e0e] space-y-1">
           {user?.role === 'admin' && (
             <button
@@ -310,7 +310,7 @@ export const ChatGPTSidebar: React.FC<ChatGPTSidebarProps> = ({
                   {user ? user.name || user.username : 'Guest User'}
                 </p>
                 <p className="text-[10px] text-emerald-400 font-mono">
-                  {user?.role === 'admin' ? 'Admin Access' : 'NEXUS Pro / OpenAI'}
+                  {user?.role === 'admin' ? 'Admin Access' : 'NEXUS Pro Member'}
                 </p>
               </div>
             </div>

@@ -145,13 +145,13 @@ export const DalleStudioModal: React.FC<DalleStudioModalProps> = ({
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                OpenAI DALL-E 3 Studio
+                NEXUS Visual Studio
                 <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                  DALL-E 3 HD • 1K / 2K / 4K
+                  NEXUS Vision HD • 1K / 2K / 4K
                 </span>
               </h2>
               <p className="text-xs text-white/50">
-                Hasilkan gambar ultra-HD dengan OpenAI DALL-E 3 Engine
+                Hasilkan gambar ultra-HD dengan NEXUS Vision Engine (NEXUS Group)
               </p>
             </div>
           </div>

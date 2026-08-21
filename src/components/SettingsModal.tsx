@@ -53,7 +53,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `nexus_chatgpt_conversations_${Date.now()}.json`;
+    a.download = `nexus_conversations_${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -74,7 +74,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
             <div>
               <h2 className="text-base font-bold text-white">Pengaturan & Preferensi</h2>
-              <p className="text-xs text-white/50">Kelola akun, suara ChatGPT, memori kustom, dan model AI</p>
+              <p className="text-xs text-white/50">NEXUS AI oleh NEXUS Group (Founder & CEO: Muhamad Andika)</p>
             </div>
           </div>
           <button
@@ -146,7 +146,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                       }`}
                     >
                       <Moon className="w-4 h-4" />
-                      <span>Dark Theme (ChatGPT)</span>
+                      <span>Dark Theme</span>
                     </button>
                     <button
                       onClick={() => onUpdateSettings({ theme: 'light' })}
@@ -201,9 +201,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             {activeTab === 'voice' && (
               <div className="space-y-5">
                 <div>
-                  <h3 className="text-sm font-bold text-white mb-1">Karakter Suara Pria (ChatGPT Male Voice)</h3>
+                  <h3 className="text-sm font-bold text-white mb-1">Karakter Suara Pria (NEXUS Male Voice)</h3>
                   <p className="text-xs text-white/50 mb-3">
-                    Menggunakan pemrosesan audio berfrekuensi natural khas suara pria asisten ChatGPT
+                    Menggunakan pemrosesan audio berfrekuensi natural khas suara asisten NEXUS
                   </p>
 
                   <div className="p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl mb-4">
@@ -362,7 +362,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             {activeTab === 'model' && (
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-sm font-bold text-white mb-1">Model OpenAI & Multimodal Engine</h3>
+                  <h3 className="text-sm font-bold text-white mb-1">Model NEXUS & Multimodal Engine</h3>
                   <p className="text-xs text-white/50">Pilih model default untuk memulai percakapan baru</p>
                 </div>
 

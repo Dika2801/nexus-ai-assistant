@@ -24,6 +24,25 @@ import {
   CustomGPT,
 } from './types';
 
+const safeStorage = {
+  getItem: (key: string): string | null => {
+    try {
+      return typeof window !== 'undefined' && window.localStorage ? localStorage.getItem(key) : null;
+    } catch {
+      return null;
+    }
+  },
+  setItem: (key: string, value: string): void => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem(key, value);
+      }
+    } catch {
+      // ignore
+    }
+  },
+};
+
 const DEFAULT_VOICE_SETTINGS: VoiceSettings = {
   enabled: true,
   autoSpeak: false,
@@ -41,7 +60,7 @@ const DEFAULT_APP_SETTINGS: AppSettings = {
   maxTokensPerRequest: 4096,
   streamResponse: true,
   systemPrompt:
-    'Anda adalah NEXUS AI Assistant, asisten cerdas serbaguna bertenaga OpenAI. Jawab dalam bahasa yang digunakan pengguna (Bahasa Indonesia atau Inggris) dengan format Markdown yang rapi, presisi, dan elegan.',
+    'Anda adalah NEXUS AI Assistant buatan NEXUS Group (Founder & CEO: Muhamad Andika). Jawab dalam bahasa yang digunakan pengguna (Bahasa Indonesia atau Inggris) dengan format Markdown yang rapi, presisi, dan elegan.',
   customInstructions: {
     enabled: true,
     aboutUser: '',
@@ -60,7 +79,7 @@ export default function App() {
   const [isDalleStudioOpen, setIsDalleStudioOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
-  // Canvas Workspace State (ChatGPT Canvas)
+  // Canvas Workspace State (NEXUS Canvas)
   const [isCanvasOpen, setIsCanvasOpen] = useState(false);
   const [canvasDocument, setCanvasDocument] = useState<CanvasDocument>({
     title: 'Catatan & Kode Workspace',
@@ -72,11 +91,10 @@ export default function App() {
 
   // Settings State
   const [settings, setSettings] = useState<AppSettings>(() => {
-    const saved = localStorage.getItem('nexus_settings');
+    const saved = safeStorage.getItem('nexus_settings');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Force autoSpeak to false so voice answers are never played automatically without user asking
         if (parsed.voice) {
           parsed.voice.autoSpeak = false;
         }
@@ -93,7 +111,7 @@ export default function App() {
     {
       id: 'nexus-5.6-sol',
       name: 'NEXUS 5.6 Sol',
-      provider: 'OpenAI',
+      provider: 'NEXUS',
       description: 'Model frontier unggulan NEXUS untuk penalaran paling kompleks, coding arsitektur, dan deep logic.',
       contextWindow: '1.05M',
       speed: 'High Reasoning',
@@ -105,7 +123,7 @@ export default function App() {
     {
       id: 'nexus-5.6-terra',
       name: 'NEXUS 5.6 Terra',
-      provider: 'OpenAI',
+      provider: 'NEXUS',
       description: 'Model serbaguna seimbang untuk analisis visual gambar, naskah dokumen, dan tugas harian.',
       contextWindow: '1.05M',
       speed: 'Balanced',
@@ -116,7 +134,7 @@ export default function App() {
     {
       id: 'nexus-5.6-luna',
       name: 'NEXUS 5.6 Luna',
-      provider: 'OpenAI',
+      provider: 'NEXUS',
       description: 'Model ultra cepat berlatensi rendah untuk respons kilat, percakapan interaktif, dan efisiensi tinggi.',
       contextWindow: '1.05M',
       speed: 'Ultra Fast',
@@ -127,7 +145,7 @@ export default function App() {
     {
       id: 'nexus-4.5-omni',
       name: 'NEXUS 4.5 Omni',
-      provider: 'OpenAI',
+      provider: 'NEXUS',
       description: 'Model flagship multimodal unggulan untuk visual, membaca gambar, logika mendalam, dan analisis.',
       contextWindow: '128K',
       speed: 'Balanced',
@@ -138,7 +156,7 @@ export default function App() {
     {
       id: 'nexus-4.5-mini',
       name: 'NEXUS 4.5 Mini',
-      provider: 'OpenAI',
+      provider: 'NEXUS',
       description: 'Model gesit & hemat kuota untuk percakapan, tugas harian, dan coding.',
       contextWindow: '128K',
       speed: 'Ultra Fast',
@@ -149,7 +167,7 @@ export default function App() {
     {
       id: 'nexus-reasoning',
       name: 'NEXUS Reasoning Pro',
-      provider: 'OpenAI',
+      provider: 'NEXUS',
       description: 'Model reasoning bertahap mendalam untuk matematika, algoritma, dan problem-solving logika.',
       contextWindow: '200K',
       speed: 'High Reasoning',
@@ -170,7 +188,7 @@ export default function App() {
 
   // Initialize User from storage or auto-login Guest
   useEffect(() => {
-    const savedUser = localStorage.getItem('nexus_user');
+    const savedUser = safeStorage.getItem('nexus_user');
     if (savedUser) {
       try {
         setUser(JSON.parse(savedUser));
@@ -182,7 +200,7 @@ export default function App() {
       ApiClient.guestLogin()
         .then((res) => {
           setUser(res.user);
-          localStorage.setItem('nexus_user', JSON.stringify(res.user));
+          safeStorage.setItem('nexus_user', JSON.stringify(res.user));
         })
         .catch((err) => {
           errorLogger.warn('auth.guestAutoLogin', err);
@@ -225,7 +243,7 @@ export default function App() {
 
   // Persist Settings & Theme
   useEffect(() => {
-    localStorage.setItem('nexus_settings', JSON.stringify(settings));
+    safeStorage.setItem('nexus_settings', JSON.stringify(settings));
     if (settings.theme === 'light') {
       document.documentElement.classList.remove('dark');
       document.body.className = 'bg-[#f7f7f8] text-[#0d0d0d] antialiased min-h-screen';
