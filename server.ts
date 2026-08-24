@@ -30,7 +30,7 @@ const OPENAI_TRANSCRIBE_MODEL = process.env.OPENAI_TRANSCRIBE_MODEL || 'whisper-
 // URL microservice face-swap eksternal (lihat folder /faceswap-service).
 // Sengaja dipisah dari backend utama karena face-swap butuh model computer
 // vision (InsightFace) yang tidak tersedia lewat OpenAI API.
-const FACE_SWAP_SERVICE_URL = process.env.FACE_SWAP_SERVICE_URL || '';
+const FACE_SWAP_SERVICE_URL = process.env.FACE_SWAP_SERVICE_URL || 'https://huggingface.co/spaces/Dikatak/ai-trading-terminal/tree/main';
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
 const app = express();
