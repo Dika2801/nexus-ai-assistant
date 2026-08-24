@@ -19,10 +19,10 @@ dotenv.config();
 // OpenAI API akan mengembalikan error 'model_not_found' yang akan diteruskan
 // apa adanya ke pengguna (lihat mapOpenAIError()).
 // ---------------------------------------------------------------------------
-const OPENAI_CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || 'gpt-4o';
+const OPENAI_CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || 'gpt-5.6';
 const OPENAI_CHAT_MODEL_MINI = process.env.OPENAI_CHAT_MODEL_MINI || 'gpt-4o-mini';
 const OPENAI_REASONING_MODEL = process.env.OPENAI_REASONING_MODEL || 'o3-mini';
-const OPENAI_IMAGE_MODEL = process.env.OPENAI_IMAGE_MODEL || 'dall-e-3';
+const OPENAI_IMAGE_MODEL = process.env.OPENAI_IMAGE_MODEL || 'gpt-image-2';
 const OPENAI_IMAGE_EDIT_MODEL = process.env.OPENAI_IMAGE_EDIT_MODEL || 'gpt-image-1';
 const OPENAI_TTS_MODEL = process.env.OPENAI_TTS_MODEL || 'tts-1';
 const OPENAI_TRANSCRIBE_MODEL = process.env.OPENAI_TRANSCRIBE_MODEL || 'whisper-1';
