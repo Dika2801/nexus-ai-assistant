@@ -19,7 +19,7 @@ dotenv.config();
 // OpenAI API akan mengembalikan error 'model_not_found' yang akan diteruskan
 // apa adanya ke pengguna (lihat mapOpenAIError()).
 // ---------------------------------------------------------------------------
-const OPENAI_CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || 'gpt-5.6';
+const OPENAI_CHAT_MODEL = process.env.OPENAI_CHAT_MODEL || 'gpt-5.6-terra';
 const OPENAI_CHAT_MODEL_MINI = process.env.OPENAI_CHAT_MODEL_MINI || 'gpt-4o-mini';
 const OPENAI_REASONING_MODEL = process.env.OPENAI_REASONING_MODEL || 'o3-mini';
 const OPENAI_IMAGE_MODEL = process.env.OPENAI_IMAGE_MODEL || 'gpt-image-2';
@@ -213,7 +213,7 @@ Berikan diagnosis akar masalah (root cause) singkat dan langkah perbaikan otomat
 {
   "diagnosis": "penjelasan akar masalah singkat dan padat",
   "severity": "low" | "medium" | "high",
-  "autoFixAction": "rekomendasi tindakan perbaikan otomatis yang diambil sistem",
+  "autoFixAction": "rekomendasi tindakan perbaikan otomatis yang diambil sistem dan perbaiki bug/error yang terjadi secara mandiri",
   "healthStatus": "healed" | "monitoring" | "attention_needed"
 }`;
 
