@@ -254,7 +254,7 @@ function checkRateLimit(key: string, limitPerMinute: number = 30): boolean {
 // Rate limit middleware
 const rateLimiter = (req: Request, res: Response, next: NextFunction) => {
   const clientKey = (req.headers['x-user-id'] as string) || req.ip || 'anonymous';
-  const maxLimit = db.settings.maxRateLimitPerMin || 30;
+  const maxLimit = db.settings.maxRateLimitPerMin || 30000;
 
   if (!checkRateLimit(clientKey, maxLimit)) {
     return res.status(429).json({
