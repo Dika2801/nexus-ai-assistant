@@ -1,0 +1,15 @@
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+# Face Swap microservice — model besar tidak di-commit
+faceswap-service/models/
+faceswap-service/**/__pycache__/
+faceswap-service/**/*.pyc
+faceswap-service/**/*.onnx
+faceswap-service/**/*.pth

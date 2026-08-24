@@ -1,0 +1,7 @@
+{
+  "name": "NEXUS AI Assistant",
+  "description": "Mobile-first, secure AI Assistant powered by OpenAI, with Chat, Vision & Doc Tools, Voice Input/Output, Face Swap, Conversation History, and Admin Management.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_OPENAI_API"]
+}
+
